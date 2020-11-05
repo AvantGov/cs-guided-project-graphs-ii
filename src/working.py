@@ -52,16 +52,18 @@ implement recursion:
 """
 
 def util__book_keeping(graph, start, current_path, all_paths):
-    all_paths = []
-    
+
+    current_path.append(start)
+
     if start in visited:
         return 
 
-    current_path.append(start)
 
     if start == len(graph) - 1:
         # creating copy of the current path item to not mutate the OG 
         all_paths.append([element for element in current_path])
+        current_path.pop()
+        return
 
     # checking if the starting node given has any connected node
     if len(graph[start]) == 0:
@@ -71,13 +73,15 @@ def util__book_keeping(graph, start, current_path, all_paths):
   
     for next_node in graph[start]:
         util__book_keeping(graph, next_node, current_path, all_paths, visited)
+    
+    current_path.pop()
 
 
 def AtoBLife(graph)
     all_paths = []
     visited = set()
-    util__book_keeping(graph, )
-
+    util__book_keeping(graph, 0, [], all_paths, visited)
+    return all_paths
 
 
 
@@ -153,3 +157,32 @@ g.addEdge(1, 3)
 s = 2 ; d = 3
 print ("Following are all different paths from % d to % d :" %(s, d)) 
 g.printAllPaths(s, d) 
+
+def csFindAllPathsFromAToB(graph):
+    all_paths = []
+    visited = set()
+    helper(graph, 0, [], all_paths, visited)
+    return all_paths
+
+    # start = 0
+def helper(graph, start, current_path, all_paths, visited):
+    
+    current_path.append(start)
+
+    if start == len(graph) - 1:
+            # --> add the current path to all paths
+        all_paths.append([element for element in current_path])
+        # pop off the last element for current_path (target) to reset it for the next path
+        current_path.pop()
+        return
+   
+    #    base case: if there are no more neighbors for the current node (start)
+    if len(graph[start]) == 0:
+        return  # there are no paths down this route that end in target
+  
+    visited.add(start)
+    #   - keep track of all neighbors --> make sure we loop over and call the recursive function on each of them
+    for neighbor in graph[start]: 
+        helper(graph, neighbor, current_path, all_paths, visited)
+   
+    current_path.pop()
